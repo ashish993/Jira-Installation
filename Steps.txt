@@ -1,0 +1,22 @@
+sudo apt-get install -y postgresql-9.3
+sudo su postgres
+
+psql -c "CREATE ROLE jirauser LOGIN PASSWORD 'jirapassword'";
+psql -c "CREATE DATABASE jiradb OWNER jirauser;
+
+psql -c "CREATE ROLE confuser LOGIN PASSWORD 'confpassword'";
+psql -c "CREATE DATABASE confdb OWNER confuser";
+
+exit
+
+sudo su
+find / -type f -name "pg_hba.conf"
+cd /etc/postgresql/9.3/main/
+vim pg_hba.conf
+#Add the following line where x.x.x.x is the ip address of the client machine:
+host all all x.x.x.x/24 trust
+
+vim postgresql.conf
+#listen_addresses = '*'
+
+sudo /etc/init.d/postgresql restart
